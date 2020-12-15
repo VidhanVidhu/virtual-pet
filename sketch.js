@@ -1,30 +1,38 @@
 //Create variables here
-var dog,happyDog,database,foodS,foodStock;
+var dogIm,happyDog,database,foodS,foodStock;
 function preload()
 {
-  dog = loadImage("images/dogImg1.png")
-  happyDog = loadImage("images/dogImg.png")
+  dogIm = loadImage("dogImg1.png")
+  happyDog = loadImage("dogImg.png")
 
 }
 
 function setup() {
-	createCanvas(500, 500);
- var dog1 = createSprite(250,250)
-  dog1.addImage("dog")
-
+	createCanvas(1000, 400);
+  dog = createSprite(250,250)
+  dog.addImage(dogIm)
+  dog.scale=0.15;
   foodStock=database.ref('food');
   foodStock.on("value",readStock);
+//feed=createButton("Feed the dog")
+//feed.position(700,95)
+//addFood=createButton("AddFood")
+//addFood.position(800,95)
+//writeStock()
+//readStock()
+ 
 }
 
 
 function draw() {  
 background(46,139,87)
 
-if(kewWentDown(UP_ARROW)){
+if(keyWentDown(UP_ARROW)){
   writeStock(foodS);
   dog.addImage(dogHappy);
 }
   drawSprites();
+  text("foodRemining:"+foodS,170,200)
   text("Note:Press UP ARROW key to feed Drago Milk!",200,100)
   //add styles here
 
