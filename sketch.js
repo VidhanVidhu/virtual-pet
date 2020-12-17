@@ -8,6 +8,7 @@ function preload()
 }
 
 function setup() {
+  database=firebase.database();
 	createCanvas(1000, 400);
   dog = createSprite(250,250)
   dog.addImage(dogIm)
@@ -29,7 +30,7 @@ background(46,139,87)
 
 if(keyWentDown(UP_ARROW)){
   writeStock(foodS);
-  dog.addImage(dogHappy);
+  dog.addImage(happyDog);
 }
   drawSprites();
   text("foodRemining:"+foodS,170,200)
