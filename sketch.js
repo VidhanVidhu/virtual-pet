@@ -1,58 +1,59 @@
-//Create variables here
 var dogIm,happyDog,database,foodS,foodStock;
+var lastFed,fedTime,foodObj,feed,addFood;
 function preload()
 {
   dogIm = loadImage("dogImg1.png")
   happyDog = loadImage("dogImg.png")
-
 }
-
 function setup() {
   database=firebase.database();
-	createCanvas(1000, 400);
-  dog = createSprite(250,250)
+  createCanvas(1000, 400);
+  foodObj=new Food()
+  dog = createSprite(800,200,150,150)
   dog.addImage(dogIm)
   dog.scale=0.15;
   foodStock=database.ref('food');
   foodStock.on("value",readStock);
-//feed=createButton("Feed the dog")
-//feed.position(700,95)
-//addFood=createButton("AddFood")
-//addFood.position(800,95)
-//writeStock()
-//readStock()
- 
+feed=createButton("Feed the dog")
+feed.position(700,95)
+feed.mousePressed(feedDog)
+addFood=createButton("AddFood")
+addFood.position(800,95)
+addFood.mousePressed(addFoods)
 }
-
 
 function draw() {  
 background(46,139,87)
-
-if(keyWentDown(UP_ARROW)){
-  writeStock(foodS);
-  dog.addImage(happyDog);
+fedTime=database.ref('FeedTime')
+fedTime.on("value",function(data){
+  lastFed=data.val()
+})
+if (lastFed>=12){
+  text("Last Feed:"+lastFed%12+"PM",350,30)
+}else if (lastFed===0){
+  text("Last Feed:+12 AM",350,30)
+}else {
+  text("Last Feed:"+lastFed+"AM",350,30)
 }
   drawSprites();
-  text("foodRemining:"+foodS,170,200)
-  text("Note:Press UP ARROW key to feed Drago Milk!",200,100)
-  //add styles here
-
 }
 function readStock(data){
   foodS=data.val();
+  foodObj.updateFoodStock(foodS)
 }
-
-function writeStock(x){
- 
-  if(x<=0){
-    x=0;
-  }else{
-    x=x-1;
-  }
+function feedDog(){
+  dog.addImage(happyDog)
+  foodObj.updateFoodStock(foodObj.getFoodStock()-1)
   database.ref('/').update({
-  food:x
-})
+    Food:foodObj.getFoodStock(),
+    FeedTime:hour()
+  })
+
 }
-
-
+function addFoods(){
+  foodS++
+  database.ref('/').update({
+    Food:foodS
+  })
+}
 
